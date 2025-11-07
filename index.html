@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/difficulties.css">
+    <link rel="stylesheet" href="css/search_box.css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script type="module" src="js/script.js"></script>
+    <script type="module" src="js/difficulties.js"></script>
+    <title>GalGuessr</title>
+</head>
+<body>
+
+    <h1>GalGuessr</h1>
+
+    <div class="container">
+        <div class="d-flex justify-content-center">
+            <div class="selector-container" id="selector">
+                <div class="selector-background"></div>
+                <button class="selector-option active" data-index="0" id="easy">柚子厨</button>
+                <button class="selector-option" data-index="1" id="normal">魔法使</button>
+                <button class="selector-option" data-index="2" id="hard">老资历</button>
+                <button class="selector-option" data-index="3" id="insane">婆罗门</button>
+            </div>
+        </div>
+
+        <div class="d-flex justify-content-center">
+            <div class="card mt-5 text-center " style="width: 22rem;">
+                <h3 class="card-header" id="currentSelection" style="background-color: #ffc107; color: white;">柚子厨</h3>
+                <div class="card-body">
+                    <p class="card-text" id="currentDescription" style="white-space: pre-wrap;"></p>
+                </div>
+            </div>
+        </div>
+        </div>
+        
+        <div class="mt-4 text-center">
+            <button class="btn btn-primary me-2" id="startBtn">开始</button>
+        </div>
+    </div>
+
+    <br>
+
+    <div class="search-container disabled">
+        <input type="text" id="searchInput" placeholder="输入角色名..." oninput="onSearchInput(this.value)">
+    <div id="dropdown" class="dropdown" style="display:none;"></div>
+    </div>
+
+    <div id="result"></div>
+
+    <div class="card" id="traits" style="width: 64rem">
+        <div class="card-header">已知Tags</div>
+        <div class="card-body">
+            <pre id="tHair"><a href="https://vndb.org/i1" class="btn btn-primary" target="_blank" >Hair</a>:</pre>
+            <pre id="tEyes"><a href="https://vndb.org/i35" class="btn btn-primary" target="_blank">Eyes</a>:</pre>
+            <pre id="tBody"><a href="https://vndb.org/i36" class="btn btn-primary" target="_blank">Body</a>:</pre>
+            <pre id="tClothes"><a href="https://vndb.org/i37" class="btn btn-primary" target="_blank">Clothes</a>:</pre>
+            <pre id="tItems"><a href="https://vndb.org/i38" class="btn btn-primary" target="_blank">Items</a>:</pre>
+            <pre id="tPersonality"><a href="https://vndb.org/i39" class="btn btn-primary" target="_blank">Personality</a>:</pre>
+            <pre id="tRole"><a href="https://vndb.org/i40" class="btn btn-primary" target="_blank">Role</a>:</pre>
+            <pre id="tEngagesIn"><a href="https://vndb.org/i41" class="btn btn-primary" target="_blank">Engages In</a>:</pre>
+            <pre id="tSubjectOf"><a href="https://vndb.org/i42" class="btn btn-primary" target="_blank">Subject Of</a>:</pre>
+            <pre id="tEngagesInSexual"><a href="https://vndb.org/i43" class="btn btn-primary" target="_blank">Engages In (Sexual)</a>:</pre>
+            <pre id="tSubjectOfSexual"><a href="https://vndb.org/i1625" class="btn btn-primary" target="_blank">Subject Of (Sexual)</a>:</pre>
+        </div>
+    </div>
+
+</body>
+</html>
