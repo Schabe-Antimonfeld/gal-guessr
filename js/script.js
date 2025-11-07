@@ -211,6 +211,7 @@ async function searchChar(name) {
                     ['role', '=', 'primary']],
                 ],
                 fields: 'name,original,image.url,traits{id,name,group_name},vns.titles{title,lang}',
+                sort: 'searchrank',
                 results: 100
             })
         })
@@ -253,7 +254,7 @@ function showDropdown(results) {
     results.forEach(char => {
         const div = document.createElement('div')
         div.className = 'dropdown-item'
-        div.textContent = char.original ? char.original : char.name
+        div.textContent = (char.original ? char.original : char.name) + (char.vns && char.vns.length > 0 ? ` 《${getVNTitle(char)}》` : '')
         div.onclick = () => selectCharacter(char)
         dropdown.appendChild(div)
     })
