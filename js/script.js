@@ -168,7 +168,7 @@ async function getRandChar(vn) {
                     ],
                     ['vn', '=', ['id', '=', vn]]
                 ],
-                fields: 'name,original,image.url,traits{id,name,group_name},vns.titles{title,lang}',
+                fields: 'name,original,image.url,traits{id,name,group_name,spoiler},vns.titles{title,lang}',
                 results: 100
             })
         })
@@ -189,7 +189,7 @@ async function getRandChar(vn) {
     }
 }
 
-async function searchChar(name) {
+async function searchChar(name, page = 1) {
     try {
         const response = await fetch(url + 'character', {
             method: 'POST',
@@ -210,8 +210,9 @@ async function searchChar(name) {
                     ['role', '=', 'main'],
                     ['role', '=', 'primary']],
                 ],
-                fields: 'name,original,image.url,traits{id,name,group_name},vns.titles{title,lang}',
+                fields: 'name,original,image.url,traits{id,name,group_name,spoiler},vns.titles{title,lang}',
                 sort: 'searchrank',
+                page: page,
                 results: 100
             })
         })
@@ -253,8 +254,19 @@ function showDropdown(results) {
 
     results.forEach(char => {
         const div = document.createElement('div')
-        div.className = 'dropdown-item'
-        div.textContent = (char.original ? char.original : char.name) + (char.vns && char.vns.length > 0 ? ` 《${getVNTitle(char)}》` : '')
+        div.className = 'dropdown-item card'
+        div.innerHTML =
+        `<div class="row g-0">
+            <div class="col-md-4">
+                <img src="${char.image ? char.image.url : ''}" alt="" height="90" width="75">
+            </div>
+            <div class="col-md-8">
+                <div class="card-body text-wrap">
+                    <h5 class="card-title">${(char.original ? char.original : char.name)}</h5>
+                    <p class="card-text" style="font-size: smaller; color: gray;">${(char.vns && char.vns.length > 0 ? ` ${getVNTitle(char)}` : '')}</p>
+                </div>
+            </div>
+        </div>`
         div.onclick = () => selectCharacter(char)
         dropdown.appendChild(div)
     })
@@ -280,12 +292,42 @@ function selectCharacter(char) {
 
 function checkGuess(char) {
     if (char.original === target.original) {
-        result.textContent = `猜对了！是 ${char.original}！`
-        result.style.color = 'green'
+        result.innerHTML = 
+            `
+            <div class="card mt-5 text-center " style="width: 22rem;">
+                <h3 class="card-header" style="background-color: green;"></h3>
+                <div class="row g-0">
+                    <div class="col-md-4">
+                        <img src="${target.image ? target.image.url : ''}" alt="" height="150" width="128">
+                    </div>
+                    <div class="col-md-8">
+                        <div class="card-body text-wrap">
+                            <h5 class="card-title">${(target.original ? target.original : target.name)}</h5>
+                            <p class="card-text" style="font-size: smaller; color: gray;">${(target.vns && target.vns.length > 0 ? ` ${getVNTitle(target)}` : '')}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            `
         handleEnd()
     } else {
-        result.textContent = '猜错了。再试试吧！'
-        result.style.color = 'red'
+        result.innerHTML = 
+            `
+            <div class="card mt-5 text-center " style="width: 22rem;">
+                <h3 class="card-header" style="background-color: red;"></h3>
+                <div class="row g-0">
+                    <div class="col-md-4">
+                        <img src="${char.image ? char.image.url : ''}" alt="" height="150" width="128">
+                    </div>
+                    <div class="col-md-8">
+                        <div class="card-body text-wrap">
+                            <h5 class="card-title">${(char.original ? char.original : char.name)}</h5>
+                            <p class="card-text" style="font-size: smaller; color: gray;">${(char.vns && char.vns.length > 0 ? ` ${getVNTitle(char)}` : '')}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            `
         const commonTraits = compareTraits(char, target)
         addCommonTraits(commonTraits)
         renderTraits(traits)
@@ -332,20 +374,18 @@ function renderTraits(traits) {
     const tRole = document.getElementById('tRole')
     const tEngagesIn = document.getElementById('tEngagesIn')
     const tSubjectOf = document.getElementById('tSubjectOf')
-    const tEngagesInSexual = document.getElementById('tEngagesInSexual')
-    const tSubjectOfSexual = document.getElementById('tSubjectOfSexual')
 
-    tHair.innerHTML = '<a href="https://vndb.org/i1" class="btn btn-primary" target="_blank">Hair</a>: ' + traits['Hair'].map(t => `<a href="https://vndb.org/${t.id}" class="btn btn-outline-primary" target="_blank">${t.name}</a>`).join(' ')
-    tEyes.innerHTML = '<a href="https://vndb.org/i35" class="btn btn-primary" target="_blank">Eyes</a>: ' + traits['Eyes'].map(t => `<a href="https://vndb.org/${t.id}" class="btn btn-outline-primary" target="_blank">${t.name}</a>`).join(' ')
-    tBody.innerHTML = '<a href="https://vndb.org/i36" class="btn btn-primary" target="_blank">Body</a>: ' + traits['Body'].map(t => `<a href="https://vndb.org/${t.id}" class="btn btn-outline-primary" target="_blank">${t.name}</a>`).join(' ')
-    tClothes.innerHTML = '<a href="https://vndb.org/i37" class="btn btn-primary" target="_blank">Clothes</a>: ' + traits['Clothes'].map(t => `<a href="https://vndb.org/${t.id}" class="btn btn-outline-primary" target="_blank">${t.name}</a>`).join(' ')
-    tItems.innerHTML = '<a href="https://vndb.org/i38" class="btn btn-primary" target="_blank">Items</a>: ' + traits['Items'].map(t => `<a href="https://vndb.org/${t.id}" class="btn btn-outline-primary" target="_blank">${t.name}</a>`).join(' ')
-    tPersonality.innerHTML = '<a href="https://vndb.org/i39" class="btn btn-primary" target="_blank">Personality</a>: ' + traits['Personality'].map(t => `<a href="https://vndb.org/${t.id}" class="btn btn-outline-primary" target="_blank">${t.name}</a>`).join(' ')
-    tRole.innerHTML = '<a href="https://vndb.org/i40" class="btn btn-primary" target="_blank">Role</a>: ' + traits['Role'].map(t => `<a href="https://vndb.org/${t.id}" class="btn btn-outline-primary" target="_blank">${t.name}</a>`).join(' ')
-    tEngagesIn.innerHTML = '<a href="https://vndb.org/i41" class="btn btn-primary" target="_blank">Engages in</a>: ' + traits['Engages in'].map(t => `<a href="https://vndb.org/${t.id}" class="btn btn-outline-primary" target="_blank">${t.name}</a>`).join(' ')
-    tSubjectOf.innerHTML = '<a href="https://vndb.org/i42" class="btn btn-primary" target="_blank">Subject of</a>: ' + traits['Subject of'].map(t => `<a href="https://vndb.org/${t.id}" class="btn btn-outline-primary" target="_blank">${t.name}</a>`).join(' ')
-    tEngagesInSexual.innerHTML = '<a href="https://vndb.org/i43" class="btn btn-primary" target="_blank">Engages in (Sexual)</a>: ' + traits['Engages in (Sexual)'].map(t => `<a href="https://vndb.org/${t.id}" class="btn btn-outline-primary" target="_blank">${t.name}</a>`).join(' ')
-    tSubjectOfSexual.innerHTML = '<a href="https://vndb.org/i1625" class="btn btn-primary" target="_blank">Subject of (Sexual)</a>: ' + traits['Subject of (Sexual)'].map(t => `<a href="https://vndb.org/${t.id}" class="btn btn-outline-primary" target="_blank">${t.name}</a>`).join(' ')
+    let spoiler = ['primary', 'warning', 'danger']
+
+    tHair.innerHTML = '<a href="https://vndb.org/i1" class="btn btn-primary" target="_blank">Hair</a>: ' + traits['Hair'].map(t => `<a href="https://vndb.org/${t.id}" class="btn btn-outline-${spoiler[t.spoiler]}" target="_blank">${t.name}</a>`).join(' ')
+    tEyes.innerHTML = '<a href="https://vndb.org/i35" class="btn btn-primary" target="_blank">Eyes</a>: ' + traits['Eyes'].map(t => `<a href="https://vndb.org/${t.id}" class="btn btn-outline-${spoiler[t.spoiler]}" target="_blank">${t.name}</a>`).join(' ')
+    tBody.innerHTML = '<a href="https://vndb.org/i36" class="btn btn-primary" target="_blank">Body</a>: ' + traits['Body'].map(t => `<a href="https://vndb.org/${t.id}" class="btn btn-outline-${spoiler[t.spoiler]}" target="_blank">${t.name}</a>`).join(' ')
+    tClothes.innerHTML = '<a href="https://vndb.org/i37" class="btn btn-primary" target="_blank">Clothes</a>: ' + traits['Clothes'].map(t => `<a href="https://vndb.org/${t.id}" class="btn btn-outline-${spoiler[t.spoiler]}" target="_blank">${t.name}</a>`).join(' ')
+    tItems.innerHTML = '<a href="https://vndb.org/i38" class="btn btn-primary" target="_blank">Items</a>: ' + traits['Items'].map(t => `<a href="https://vndb.org/${t.id}" class="btn btn-outline-${spoiler[t.spoiler]}" target="_blank">${t.name}</a>`).join(' ')
+    tPersonality.innerHTML = '<a href="https://vndb.org/i39" class="btn btn-primary" target="_blank">Personality</a>: ' + traits['Personality'].map(t => `<a href="https://vndb.org/${t.id}" class="btn btn-outline-${spoiler[t.spoiler]}" target="_blank">${t.name}</a>`).join(' ')
+    tRole.innerHTML = '<a href="https://vndb.org/i40" class="btn btn-primary" target="_blank">Role</a>: ' + traits['Role'].map(t => `<a href="https://vndb.org/${t.id}" class="btn btn-outline-${spoiler[t.spoiler]}" target="_blank">${t.name}</a>`).join(' ')
+    tEngagesIn.innerHTML = '<a href="https://vndb.org/i41" class="btn btn-primary" target="_blank">Engages in</a>: ' + traits['Engages in'].map(t => `<a href="https://vndb.org/${t.id}" class="btn btn-outline-${spoiler[t.spoiler]}" target="_blank">${t.name}</a>`).join(' ')
+    tSubjectOf.innerHTML = '<a href="https://vndb.org/i42" class="btn btn-primary" target="_blank">Subject of</a>: ' + traits['Subject of'].map(t => `<a href="https://vndb.org/${t.id}" class="btn btn-outline-${spoiler[t.spoiler]}" target="_blank">${t.name}</a>`).join(' ')
 }
 
 getStats()
@@ -360,7 +400,9 @@ let gameStarted = false
 
 async function handleStart() {
     gameStarted = true
-    startBtn.innerText = '加载中...'
+    startBtn.innerHTML =
+        `<span class="spinner-border spinner-border-sm" aria-hidden="true"></span>
+        <span role="status">加载中</span>`
 
     const difficulty = document.querySelector('.selector-option.active').id
     const options = document.querySelectorAll('.selector-option')
@@ -384,7 +426,23 @@ function handleEnd() {
     document.querySelector('.search-container').classList.add('disabled')
 
     startBtn.innerText = '再来一次'
-    result.textContent = `答案:《${getVNTitle(target)}》${target.original}`
+    result.innerHTML = 
+        `
+        <div class="card mt-5 text-center " style="width: 22rem;">
+            <h3 class="card-header" style="background-color: green;"></h3>
+            <div class="row g-0">
+                <div class="col-md-4">
+                    <img src="${target.image ? target.image.url : ''}" alt="" height="150" width="128">
+                </div>
+                <div class="col-md-8">
+                    <div class="card-body text-wrap">
+                        <h5 class="card-title">${(target.original ? target.original : target.name)}</h5>
+                        <p class="card-text" style="font-size: smaller; color: gray;">${(target.vns && target.vns.length > 0 ? ` ${getVNTitle(target)}` : '')}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        `
 
     gameStarted = false
 }

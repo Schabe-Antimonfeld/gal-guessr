@@ -35,7 +35,6 @@
                 </div>
             </div>
         </div>
-        </div>
         
         <div class="mt-4 text-center">
             <button class="btn btn-primary me-2" id="startBtn">开始</button>
@@ -46,10 +45,27 @@
 
     <div class="search-container disabled">
         <input type="text" id="searchInput" placeholder="输入角色名..." oninput="onSearchInput(this.value)">
-    <div id="dropdown" class="dropdown" style="display:none;"></div>
+        <div id="dropdown" class="dropdown" style="display:none;"></div>
     </div>
 
-    <div id="result"></div>
+    <div id="result">
+        <div class="card mt-5 text-center " style="width: 22rem;">
+            <h3 class="card-header" style="background-color: gainsboro;"></h3>
+            <div class="row g-0">
+                <div class="col-md-4">
+                    <img src="https://placeholder.im/128x150/GalGuessr/f6f6f6/000000" alt="" height="150" width="128">
+                </div>
+                <div class="col-md-8">
+                    <div class="card-body text-wrap">
+                        <h5 class="card-title">我是谁？</h5>
+                        <p class="card-text" style="font-size: smaller; color: gray;">我从哪里来?</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <br>
 
     <div class="container d-flex justify-content-center">
         <div class="card w-100" id="traits" style="max-width: 64rem">
@@ -64,8 +80,6 @@
                 <pre id="tRole"><a href="https://vndb.org/i40" class="btn btn-primary" target="_blank">Role</a>:</pre>
                 <pre id="tEngagesIn"><a href="https://vndb.org/i41" class="btn btn-primary" target="_blank">Engages In</a>:</pre>
                 <pre id="tSubjectOf"><a href="https://vndb.org/i42" class="btn btn-primary" target="_blank">Subject Of</a>:</pre>
-                <pre id="tEngagesInSexual"><a href="https://vndb.org/i43" class="btn btn-primary" target="_blank">Engages In (Sexual)</a>:</pre>
-                <pre id="tSubjectOfSexual"><a href="https://vndb.org/i1625" class="btn btn-primary" target="_blank">Subject Of (Sexual)</a>:</pre>
             </div>
         </div>
     </div>
