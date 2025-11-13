@@ -328,15 +328,15 @@ function checkGuess(char) {
                 </div>
             </div>
             `
-        const commonTraits = compareTraits(char, target)
+        const commonTraits = compareTraits(target, char)
         addCommonTraits(commonTraits)
         renderTraits(traits)
     }
 }
 
-function compareTraits(char1, char2) {
-    const traits1 = char1.traits
-    const traits2 = char2.traits
+function compareTraits(target, char) {
+    const traits1 = target.traits
+    const traits2 = char.traits
     const commonTraits = traits1.filter(t1 => traits2.some(t2 => t2.id === t1.id))
     return commonTraits
 }
