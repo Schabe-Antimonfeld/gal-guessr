@@ -81,3 +81,41 @@ export function renderTraits(currentTraits) {
     tEngagesIn.innerHTML = '<a href="https://vndb.org/i41" class="btn btn-primary" target="_blank">主动</a>: ' + currentTraits['Engages in'].map(t => `<a href="https://vndb.org/${t.id}" class="btn btn-outline-${spoiler[t.spoiler]}" target="_blank">${dict ? dict[t.name] : t.name}</a>`).join(' ')
     tSubjectOf.innerHTML = '<a href="https://vndb.org/i42" class="btn btn-primary" target="_blank">被动</a>: ' + currentTraits['Subject of'].map(t => `<a href="https://vndb.org/${t.id}" class="btn btn-outline-${spoiler[t.spoiler]}" target="_blank">${dict ? dict[t.name] : t.name}</a>`).join(' ')
 }
+
+export function showToast(title, message, type='info') {
+    const container = document.getElementById('toast-container')
+            
+    // 创建 toast 元素
+    const toastId = 'toast-' + Date.now()
+    const toastEl = document.createElement('div')
+    toastEl.id = toastId
+    toastEl.className = 'toast align-items-center text-white bg-' + type + ' border-0';
+    toastEl.setAttribute('role', 'alert');
+    toastEl.setAttribute('aria-live', 'assertive')
+    toastEl.setAttribute('aria-atomic', 'true')
+    
+    toastEl.innerHTML = `
+        <div class="d-flex">
+            <div class="toast-body">
+                <strong>${title}</strong><br>
+                ${message}
+            </div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+    `;
+    
+    container.appendChild(toastEl)
+    
+    // 初始化并显示 toast
+    const toast = new bootstrap.Toast(toastEl, {
+        autohide: true,
+        delay: 3000  // 3秒后自动消失
+    });
+    
+    toast.show();
+    
+    // toast 隐藏后从 DOM 中移除
+    toastEl.addEventListener('hidden.bs.toast', function() {
+        toastEl.remove()
+    });
+}

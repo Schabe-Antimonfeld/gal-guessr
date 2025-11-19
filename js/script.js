@@ -1,6 +1,6 @@
 import { getStats, getVN, getRandChar } from './api.js'
 import { loadDict, traits } from './data.js'
-import { onSearchInput, showDropdown, renderTraits } from './ui.js'
+import { onSearchInput, showDropdown, renderTraits, showToast } from './ui.js'
 
 window.onSearchInput = onSearchInput
 
@@ -15,6 +15,7 @@ function checkGuess(char) {
     if (char.original === target.original) {
         handleEnd()
     } else {
+        showToast('猜错了喵~', '欧吉桑真是杂鱼~', 'danger')
         result.innerHTML = 
             `
             <div class="card mt-5 text-center " style="width: 22rem;">
@@ -60,6 +61,7 @@ async function handleStart() {
     const vns = await getVN(difficulty)
     const vn = vns[Math.floor(Math.random() * vns.length)]
     target = await getRandChar(vn.id)
+    showToast('初始化成功喵~', `共搜索到 ${vns.length} 部符合条件的作品喵~`)
 
     document.getElementById('selector').classList.add('disabled')
     document.querySelector('.search-container').classList.remove('disabled')
@@ -103,6 +105,7 @@ startBtn.addEventListener('click', function () {
     if (!target) {
         handleStart()
     } else if (gameStarted) {
+        showToast('猜不出来了？', '这就认输啦，杂鱼欧吉桑~', 'warning')
         handleEnd()
     } else {
         handleRestart()

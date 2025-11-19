@@ -8,10 +8,10 @@ const disableBtn = document.getElementById('disableBtn')
 
 const colors = ['#ffc107', '#28a745', '#007bff', '#dc3545']
 const descriptions = [
-    'Ciallo～(∠・ω< )⌒★\n仅含柚子社魔宴以及之后作品',
-    '(手)纸上的魔法使\nVNDB评分数≥2000且评分≥7.0',
-    '给老资历跪了\nVNDB评分数≥1000且评分≥6.5',
-    '玩过的gal比吃过的米还多\nVNDB评分数≥500且评分≥6.0'
+    'Ciallo～(∠・ω< )⌒★\n仅含柚子社魔宴以及之后作品\n仅含汉化作品',
+    '(手)纸上的魔法使\nVNDB评分数≥2000且评分≥7.0\n仅含汉化作品',
+    '给老资历跪了\nVNDB评分数≥1000且评分≥6.5\n仅含汉化作品',
+    '玩过的gal比吃过的米还多\nVNDB评分数≥500且评分≥6.0\n仅含汉化作品'
 ]
 
 function initBackground() {
