@@ -26,7 +26,7 @@ async function getVN(difficulty = 'normal') {
         let filters = []
         switch (difficulty) {
             case 'easy':
-                // 仅柚子社作品 截止2025.11.06共13部
+                // 仅柚子社作品
                 // Ciallo～(∠・ω< )⌒★
                 // 柚子厨蒸鹅心是说
                 filters = [
@@ -36,14 +36,16 @@ async function getVN(difficulty = 'normal') {
                 ]   
                 break
             case 'normal':
-                // vndb 评分数>=2000 评分>=7.0 截至2025.11.06共96部
+                // vndb 评分数>=2000 评分>=7.0
                 filters =[
                     'and',
                     ['olang', '=', 'ja'],
                     ['votecount', '>=', 2000],
                     ['rating', '>=', 70],
                     ['release', '=', [
-                        'or',
+                        'and', 
+                        ['lang', '=', 'zh-Hans'],
+                        ['or',
                         ['minage', '>=', 18],
                         ['producer', '=', [
                             'or',
@@ -53,7 +55,7 @@ async function getVN(difficulty = 'normal') {
                             ['id', '=', 'p11'],    // Stage-nana
                             ['id', '=', 'p3354'],  // NOVECT
                             ['id', '=', 'p336']    // Frontwing
-                        ]]
+                        ]]]
                     ]],
                     ['tag', '!=', 'g35'],    // RPG
                     ['tag', '!=', 'g33'],    // Strategy Game
@@ -61,14 +63,16 @@ async function getVN(difficulty = 'normal') {
                 ]
                 break
             case 'hard':
-                // vndb 评分数>=1000 评分>=6.5 截至2025.11.06共377部
+                // vndb 评分数>=1000 评分>=6.5
                 filters = [
                     'and',
                     ['olang', '=', 'ja'],
                     ['votecount', '>=', 1000],
                     ['rating', '>=', 65],
                     ['release', '=', [
-                        'or',
+                        'and',
+                        ['lang', '=', 'zh-Hans'],
+                        ['or',
                         ['minage', '>=', 18],
                         ['producer', '=', [
                             'or',
@@ -78,7 +82,7 @@ async function getVN(difficulty = 'normal') {
                             ['id', '=', 'p11'],    // Stage-nana
                             ['id', '=', 'p3354'],  // NOVECT
                             ['id', '=', 'p336']    // Frontwing
-                        ]]
+                        ]]]
                     ]],
                     ['tag', '!=', 'g35'],    // RPG
                     ['tag', '!=', 'g33'],    // Strategy Game
@@ -86,14 +90,16 @@ async function getVN(difficulty = 'normal') {
                 ]
                 break
             case 'insane':
-            // vndb 评分数>=500 评分>=6.0 截至2025.11.06共1652部
+            // vndb 评分数>=500 评分>=6.0
                 filters = [
-                        'and',
+                    'and',
                     ['olang', '=', 'ja'],
                     ['votecount', '>=', 500],
                     ['rating', '>=', 60],
                     ['release', '=', [
-                        'or',
+                        'and',
+                        ['lang', '=', 'zh-Hans'],
+                        ['or',
                         ['minage', '>=', 18],
                         ['producer', '=', [
                             'or',
@@ -103,7 +109,7 @@ async function getVN(difficulty = 'normal') {
                             ['id', '=', 'p11'],    // Stage-nana
                             ['id', '=', 'p3354'],  // NOVECT
                             ['id', '=', 'p336']    // Frontwing
-                        ]]
+                        ]]]
                     ]],
                     ['tag', '!=', 'g35'],    // RPG
                     ['tag', '!=', 'g33'],    // Strategy Game
@@ -201,6 +207,23 @@ async function searchChar(name, page = 1) {
                     ['vn', '=', [
                         'and',
                         ['olang', '=', 'ja'],
+                        ['votecount', '>=', 500],
+                        ['rating', '>=', 60],
+                        ['release', '=', [
+                            'and',
+                            ['lang', '=', 'zh-Hans'],
+                            ['or',
+                            ['minage', '>=', 18],
+                            ['producer', '=', [
+                                'or',
+                                ['id', '=', 'p24'],    // Key
+                                ['id', '=', 'p146'],   // MAGES
+                                ['id', '=', 'p82'],    // 07th Expansion
+                                ['id', '=', 'p11'],    // Stage-nana
+                                ['id', '=', 'p3354'],  // NOVECT
+                                ['id', '=', 'p336']    // Frontwing
+                            ]]]
+                        ]],
                         ['tag', '!=', 'g35'],    // RPG
                         ['tag', '!=', 'g33'],    // Strategy Game
                         ['tag', '!=', 'g350']    // Interactive Adventure Game
@@ -292,23 +315,6 @@ function selectCharacter(char) {
 
 function checkGuess(char) {
     if (char.original === target.original) {
-        result.innerHTML = 
-            `
-            <div class="card mt-5 text-center " style="width: 22rem;">
-                <h3 class="card-header" style="background-color: green;"></h3>
-                <div class="row g-0">
-                    <div class="col-md-4">
-                        <img src="${target.image ? target.image.url : ''}" alt="" height="150" width="128">
-                    </div>
-                    <div class="col-md-8">
-                        <div class="card-body text-wrap">
-                            <h5 class="card-title">${(target.original ? target.original : target.name)}</h5>
-                            <p class="card-text" style="font-size: smaller; color: gray;">${(target.vns && target.vns.length > 0 ? ` ${getVNTitle(target)}` : '')}</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            `
         handleEnd()
     } else {
         result.innerHTML = 
@@ -363,6 +369,9 @@ function addCommonTraits(commonTraits) {
     })
 }
 
+let dict = null
+fetch('./lang.json').then(response => response.json()).then(data => dict = data)
+
 function renderTraits(traits) {
     console.log('[INFO] Current common traits:', traits)
     const tHair = document.getElementById('tHair')
@@ -377,15 +386,15 @@ function renderTraits(traits) {
 
     let spoiler = ['primary', 'warning', 'danger']
 
-    tHair.innerHTML = '<a href="https://vndb.org/i1" class="btn btn-primary" target="_blank">Hair</a>: ' + traits['Hair'].map(t => `<a href="https://vndb.org/${t.id}" class="btn btn-outline-${spoiler[t.spoiler]}" target="_blank">${t.name}</a>`).join(' ')
-    tEyes.innerHTML = '<a href="https://vndb.org/i35" class="btn btn-primary" target="_blank">Eyes</a>: ' + traits['Eyes'].map(t => `<a href="https://vndb.org/${t.id}" class="btn btn-outline-${spoiler[t.spoiler]}" target="_blank">${t.name}</a>`).join(' ')
-    tBody.innerHTML = '<a href="https://vndb.org/i36" class="btn btn-primary" target="_blank">Body</a>: ' + traits['Body'].map(t => `<a href="https://vndb.org/${t.id}" class="btn btn-outline-${spoiler[t.spoiler]}" target="_blank">${t.name}</a>`).join(' ')
-    tClothes.innerHTML = '<a href="https://vndb.org/i37" class="btn btn-primary" target="_blank">Clothes</a>: ' + traits['Clothes'].map(t => `<a href="https://vndb.org/${t.id}" class="btn btn-outline-${spoiler[t.spoiler]}" target="_blank">${t.name}</a>`).join(' ')
-    tItems.innerHTML = '<a href="https://vndb.org/i38" class="btn btn-primary" target="_blank">Items</a>: ' + traits['Items'].map(t => `<a href="https://vndb.org/${t.id}" class="btn btn-outline-${spoiler[t.spoiler]}" target="_blank">${t.name}</a>`).join(' ')
-    tPersonality.innerHTML = '<a href="https://vndb.org/i39" class="btn btn-primary" target="_blank">Personality</a>: ' + traits['Personality'].map(t => `<a href="https://vndb.org/${t.id}" class="btn btn-outline-${spoiler[t.spoiler]}" target="_blank">${t.name}</a>`).join(' ')
-    tRole.innerHTML = '<a href="https://vndb.org/i40" class="btn btn-primary" target="_blank">Role</a>: ' + traits['Role'].map(t => `<a href="https://vndb.org/${t.id}" class="btn btn-outline-${spoiler[t.spoiler]}" target="_blank">${t.name}</a>`).join(' ')
-    tEngagesIn.innerHTML = '<a href="https://vndb.org/i41" class="btn btn-primary" target="_blank">Engages in</a>: ' + traits['Engages in'].map(t => `<a href="https://vndb.org/${t.id}" class="btn btn-outline-${spoiler[t.spoiler]}" target="_blank">${t.name}</a>`).join(' ')
-    tSubjectOf.innerHTML = '<a href="https://vndb.org/i42" class="btn btn-primary" target="_blank">Subject of</a>: ' + traits['Subject of'].map(t => `<a href="https://vndb.org/${t.id}" class="btn btn-outline-${spoiler[t.spoiler]}" target="_blank">${t.name}</a>`).join(' ')
+    tHair.innerHTML = '<a href="https://vndb.org/i1" class="btn btn-primary" target="_blank">毛发</a>: ' + traits['Hair'].map(t => `<a href="https://vndb.org/${t.id}" class="btn btn-outline-${spoiler[t.spoiler]}" target="_blank">${dict[t.name]}</a>`).join(' ')
+    tEyes.innerHTML = '<a href="https://vndb.org/i35" class="btn btn-primary" target="_blank">眼睛</a>: ' + traits['Eyes'].map(t => `<a href="https://vndb.org/${t.id}" class="btn btn-outline-${spoiler[t.spoiler]}" target="_blank">${dict[t.name]}</a>`).join(' ')
+    tBody.innerHTML = '<a href="https://vndb.org/i36" class="btn btn-primary" target="_blank">身体</a>: ' + traits['Body'].map(t => `<a href="https://vndb.org/${t.id}" class="btn btn-outline-${spoiler[t.spoiler]}" target="_blank">${dict[t.name]}</a>`).join(' ')
+    tClothes.innerHTML = '<a href="https://vndb.org/i37" class="btn btn-primary" target="_blank">服装</a>: ' + traits['Clothes'].map(t => `<a href="https://vndb.org/${t.id}" class="btn btn-outline-${spoiler[t.spoiler]}" target="_blank">${dict[t.name]}</a>`).join(' ')
+    tItems.innerHTML = '<a href="https://vndb.org/i38" class="btn btn-primary" target="_blank">物品</a>: ' + traits['Items'].map(t => `<a href="https://vndb.org/${t.id}" class="btn btn-outline-${spoiler[t.spoiler]}" target="_blank">${dict[t.name]}</a>`).join(' ')
+    tPersonality.innerHTML = '<a href="https://vndb.org/i39" class="btn btn-primary" target="_blank">性格</a>: ' + traits['Personality'].map(t => `<a href="https://vndb.org/${t.id}" class="btn btn-outline-${spoiler[t.spoiler]}" target="_blank">${dict[t.name]}</a>`).join(' ')
+    tRole.innerHTML = '<a href="https://vndb.org/i40" class="btn btn-primary" target="_blank">角色</a>: ' + traits['Role'].map(t => `<a href="https://vndb.org/${t.id}" class="btn btn-outline-${spoiler[t.spoiler]}" target="_blank">${dict[t.name]}</a>`).join(' ')
+    tEngagesIn.innerHTML = '<a href="https://vndb.org/i41" class="btn btn-primary" target="_blank">主动</a>: ' + traits['Engages in'].map(t => `<a href="https://vndb.org/${t.id}" class="btn btn-outline-${spoiler[t.spoiler]}" target="_blank">${dict[t.name]}</a>`).join(' ')
+    tSubjectOf.innerHTML = '<a href="https://vndb.org/i42" class="btn btn-primary" target="_blank">被动</a>: ' + traits['Subject of'].map(t => `<a href="https://vndb.org/${t.id}" class="btn btn-outline-${spoiler[t.spoiler]}" target="_blank">${dict[t.name]}</a>`).join(' ')
 }
 
 getStats()
