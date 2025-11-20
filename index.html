@@ -23,48 +23,66 @@
     <div id="toast-container"></div>
 
     <div class="btn-group" role="group">
-        <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#tutorial">写给玩家</button>
-        <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#history">猜测记录</button>
+        <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#tutorial">游戏规则简介</button>
+        <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#history">猜测历史记录</button>
     </div>
 
     <div class="modal fade" id="tutorial" tabindex="-1">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5">写给玩家</h1>
+                    <h1 class="modal-title fs-5">游戏规则简介</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <div><h5>游戏规则</h5></div>
-                    <div>选择难度，点击开始按钮开始游戏</div>
-                    <div>在搜索框中输入猜测角色的日文/罗马字名字进行搜索</div>
-                    <div>在字形相同时也可以试着输入汉字</div>
-                    <div>点击下拉框选择猜测角色</div>
-                    <div>系统会根据你的猜测给出猜测角色与目标角色的相同Traits</div>
-                    <div>Traits根据剧透的严重性分为蓝、黄、红三个等级</div>
-                    <div>根据已知Traits逐步缩小范围，直到猜出目标角色吧！</div>
-                    <div><h5>关于搜索</h5></div>
-                    <div>搜索功能基于<a href="https://vndb.org" target="_blank">VNDB</a>提供的API</div>
-                    <div>仅确保日文和罗马字输入能正常匹配</div>
-                    <div>忘记了角色的日文名可以去<a href="https://bgm.tv/" target="_blank">Bangumi</a>搜索</div>
-                    <div>搜索结果会优先显示关联度较高的角色</div>
-                    <div>仅显示前100条结果</div>
-                    <div><h5>难度等级与筛选规则</h5></div>
-                    <div>不同难度等级对应不同的作品筛选规则</div>
-                    <div>角色选取方式大致为：</div>
-                    <div>1. 根据难度等级筛选作品</div>
-                    <div>2. 从筛选后的作品中随机选取主要角色</div>
-                    <div>难度越高，作品越多，猜测越难</div>
-                    <div>筛选标准大致如下，详细请参考<a href="./js/api.js" target="_blank">源代码</a></div>
-                    <div>1. 原始语言为日语</div>
-                    <div>2. VNDB游戏时长在“Medium”及以上</div>
-                    <div>3. VNDB评分数与评分数均达到一定标准</div>
-                    <div>4. 有至少一个中文发行版</div>
-                    <div>5. 为R18或知名全年龄Gal会社作品</div>
-                    <div>6. 不包含某些特定标签</div>
-                    <div><h5>作者的话</h5></div>
-                    <div>喜欢的话来<a href="https://github.com/Schabe-Antimonfeld/gal-guessr" target="_blank">GitHub</a>给个星标喵~</div>
-                    <div>如果有希望屏蔽的Tags或其他建议和想法欢迎提Issue喵~</div>
+                    <h5>游戏规则</h5>
+                    <ul>
+                        <li>选择难度后点击「开始」进入游戏</li>
+                        <li>在搜索框输入角色的日文名或罗马字进行搜索</li>
+                        <li>从下拉框中选择要提交的猜测角色</li>
+                        <li>系统会根据你的猜测展示与目标角色相同的 Traits</li>
+                        <li>Traits 按剧透程度分为：蓝色（轻）、黄色（中）、红色（重）</li>
+                        <li>猜错无惩罚，次数不限，请随意尝试</li>
+                        <li>直接在搜索框内再次输入即可再进行一次尝试</li>
+                        <li>根据反馈的 Traits 逐步缩小范围，直到找到目标角色！</li>
+                    </ul>
+
+                    <h5>关于搜索</h5>
+                    <ul>
+                        <li>搜索功能基于 <a href="https://vndb.org" target="_blank">VNDB</a> 官方 API</li>
+                        <li>可确保日文与罗马字搜索正常匹配。</li>
+                        <li>搜索结果按关联度排序，仅显示前 100 条</li>
+                    </ul>
+
+                    <h5>难度等级与筛选规则</h5>
+                    <p>不同难度会影响可选作品范围，角色选择流程如下：</p>
+                    <ol>
+                        <li>根据当前难度筛选满足条件的作品</li>
+                        <li>从筛选后的作品中随机选择主要角色</li>
+                    </ol>
+                    <p>难度越高 → 作品越多 → 猜中目标角色的难度越大</p>
+                    <p>筛选标准大致包括：</p>
+                    <ul>
+                        <li>原始语言为日语</li>
+                        <li>VNDB 游戏时长为 Medium 及以上</li>
+                        <li>拥有一定的评分人数与评分</li>
+                        <li>至少存在一个中文发行版</li>
+                        <li>为 R18 或知名全年龄 Gal 社作品</li>
+                        <li>不包含某些特定的屏蔽标签</li>
+                    </ul>
+                    <p>详细筛选逻辑请参考 <a href="./js/api.js" target="_blank">源代码</a>。</p>
+                    <h5>Tips</h5>
+                    <ul>
+                        <li>搜索时，字形一致也可尝试输入汉字</li>
+                        <li>第一次不知道猜谁？可以先从你最喜欢的角色开始</li>
+                        <li>若搜索不到想猜测的角色，可能是该角色所属作品未通过筛选</li>
+                        <li>忘记角色的日文名？可去 <a href="https://bgm.tv/" target="_blank">Bangumi</a> 查询</li>
+                    </ul>
+                    <h5>作者的话</h5>
+                    <ul>
+                        <li>喜欢的话欢迎来 <a href="https://github.com/Schabe-Antimonfeld/gal-guessr" target="_blank">GitHub</a> 点个星标喵~</li>
+                        <li>若有想屏蔽的 Tags 或功能建议，欢迎随时提 Issue 喵~</li>
+                    </ul>
                 </div>
             </div>
         </div>
@@ -74,7 +92,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5">猜测记录</h1>
+                    <h1 class="modal-title fs-5">猜测历史记录</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body history">
