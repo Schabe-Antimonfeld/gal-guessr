@@ -233,6 +233,7 @@ export async function searchChar(name, page = 1) {
                             ['minage', '>=', 18],
                             ['producer', '=', [
                                 'or',
+                                ['id', '=', 'p98'],    // Yuzusoft
                                 ['id', '=', 'p24'],    // Key
                                 ['id', '=', 'p146'],   // MAGES
                                 ['id', '=', 'p82'],    // 07th Expansion
