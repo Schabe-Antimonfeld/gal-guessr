@@ -1,24 +1,41 @@
 import { getStats, getVN, getRandChar } from './api.js'
 import { loadDict, traits } from './data.js'
-import { onSearchInput, showDropdown, renderTraits, showToast } from './ui.js'
-
-window.onSearchInput = onSearchInput
+import { renderTraits, showToast } from './ui.js'
+import { getVNTitle } from './helpers.js'
 
 const startBtn = document.getElementById('startBtn')
 const result = document.getElementById('result')
+const history = document.querySelector('.history')
 
 let target = null
 let gameStarted = false
+let attempts = 0
 
 function checkGuess(char) {
     if (!target) return
+    attempts += 1
+    if (history.innerHTML.includes('记录空空如也喵~')) {
+        history.innerHTML = ''
+    }
+    history.innerHTML +=
+        `<div class="row g-0">
+            <div class="col-md-4">
+                <img src="${char.image ? char.image.url : ''}" alt="" height="90" width="75">
+            </div>
+            <div class="col-md-8">
+                <div class="card-body text-wrap">
+                    <h5 class="card-title">${(char.original ? char.original : char.name)}</h5>
+                    <p class="card-text" style="font-size: smaller; color: gray;">${(char.vns && char.vns.length > 0 ? ` ${getVNTitle(char)}` : '')}</p>
+                </div>
+            </div>
+        </div>`
     if (char.original === target.original) {
         handleEnd()
     } else {
         showToast('猜错了喵~', '欧吉桑真是杂鱼~', 'danger')
         result.innerHTML = 
             `
-            <div class="card mt-5 text-center " style="width: 22rem;">
+            <div class="card text-center " style="width: 22rem;">
                 <h3 class="card-header" style="background-color: red;"></h3>
                 <div class="row g-0">
                     <div class="col-md-4">
@@ -27,7 +44,8 @@ function checkGuess(char) {
                     <div class="col-md-8">
                         <div class="card-body text-wrap">
                             <h5 class="card-title">${(char.original ? char.original : char.name)}</h5>
-                            <p class="card-text" style="font-size: smaller; color: gray;">${(char.vns && char.vns.length > 0 ? `${char.vns[0].titles.find(t => t.lang === 'zh-Hans') ? char.vns[0].titles.find(t => t.lang === 'zh-Hans').title : (char.vns[0].titles.find(t => t.lang === 'ja') ? char.vns[0].titles.find(t => t.lang === 'ja').title : '')}` : '')}</p>
+                            <p class="card-text" style="font-size: smaller; color: gray;">${(char.vns && char.vns.length > 0 ? `${getVNTitle(char)}` : '')}</p>
+                            <p class="card-text" style="font-size: smaller; color: gray;">尝试次数: ${attempts}</p>
                         </div>
                     </div>
                 </div>
@@ -78,7 +96,7 @@ function handleEnd() {
     startBtn.innerText = '再来一次'
     result.innerHTML = 
         `
-        <div class="card mt-5 text-center " style="width: 22rem;">
+        <div class="card text-center " style="width: 22rem;">
             <h3 class="card-header" style="background-color: green;"></h3>
             <div class="row g-0">
                 <div class="col-md-4">
@@ -87,7 +105,8 @@ function handleEnd() {
                 <div class="col-md-8">
                     <div class="card-body text-wrap">
                         <h5 class="card-title">${(target.original ? target.original : target.name)}</h5>
-                        <p class="card-text" style="font-size: smaller; color: gray;">${(target.vns && target.vns.length > 0 ? ` ${target.vns[0].titles.find(t => t.lang === 'zh-Hans') ? target.vns[0].titles.find(t => t.lang === 'zh-Hans').title : (target.vns[0].titles.find(t => t.lang === 'ja') ? target.vns[0].titles.find(t => t.lang === 'ja').title : '')}` : '')}</p>
+                        <p class="card-text" style="font-size: smaller; color: gray;">${(target.vns && target.vns.length > 0 ? ` ${getVNTitle(target)}` : '')}</p>
+                        <p class="card-text" style="font-size: smaller; color: gray;">尝试次数: ${attempts}</p>
                     </div>
                 </div>
             </div>

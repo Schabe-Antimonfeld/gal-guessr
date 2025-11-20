@@ -2,6 +2,8 @@ import { getVNTitle } from './helpers.js'
 import { traits, dict } from './data.js'
 import { searchChar } from './api.js'
 
+const button = document.getElementById('button-addon2')
+
 export function showDropdown(results) {
     const dropdown = document.getElementById('dropdown')
     dropdown.innerHTML = ''
@@ -21,17 +23,19 @@ export function showDropdown(results) {
         const div = document.createElement('div')
         div.className = 'dropdown-item card'
         div.innerHTML =
-        `<div class="row g-0">
-            <div class="col-md-4">
-                <img src="${char.image ? char.image.url : ''}" alt="" height="90" width="75">
-            </div>
-            <div class="col-md-8">
-                <div class="card-body text-wrap">
-                    <h5 class="card-title">${(char.original ? char.original : char.name)}</h5>
-                    <p class="card-text" style="font-size: smaller; color: gray;">${(char.vns && char.vns.length > 0 ? ` ${getVNTitle(char)}` : '')}</p>
+            `
+            <div class="row g-0">
+                <div class="col-md-4">
+                    <img src="${char.image ? char.image.url : ''}" alt="" height="90" width="75">
+                </div>
+                <div class="col-md-8">
+                    <div class="card-body text-wrap">
+                        <h5 class="card-title">${(char.original ? char.original : char.name)}</h5>
+                        <p class="card-text" style="font-size: smaller; color: gray;">${(char.vns && char.vns.length > 0 ? ` ${getVNTitle(char)}` : '')}</p>
+                    </div>
                 </div>
             </div>
-        </div>`
+            `
         div.onclick = () => selectCharacter(char)
         dropdown.appendChild(div)
     })
@@ -39,15 +43,32 @@ export function showDropdown(results) {
     dropdown.style.display = 'block'
 }
 
-export async function onSearchInput(value) {
+document.addEventListener('click', (event) => {
+    const dropdown = document.getElementById('dropdown')
+    const searchContainer = document.querySelector('.search-container')
+
+    // 如果 dropdown 是隐藏的，忽略
+    if (dropdown.style.display === 'none') return
+
+    // 如果点击的是 searchContainer 或 dropdown 内部，就不关闭
+    if (searchContainer.contains(event.target)) return
+
+    // 否则关闭
+    dropdown.style.display = 'none'
+})
+
+button.addEventListener('click', async () => {
+    const value = document.getElementById('searchInput').value
     if (!value.trim()) {
         document.getElementById('dropdown').style.display = 'none'
         return
     }
     showDropdown(['检索VNDB中...'])
+    button.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>'
     let results = await searchChar(value)
     showDropdown(results)
-}
+    button.innerHTML = '<i class="bi bi-search"></i>'
+})
 
 export function selectCharacter(char) {
     document.getElementById('searchInput').value = char.original
@@ -71,15 +92,15 @@ export function renderTraits(currentTraits) {
 
     let spoiler = ['primary', 'warning', 'danger']
 
-    tHair.innerHTML = '<a href="https://vndb.org/i1" class="btn btn-primary" target="_blank">毛发</a>: ' + currentTraits['Hair'].map(t => `<a href="https://vndb.org/${t.id}" class="btn btn-outline-${spoiler[t.spoiler]}" target="_blank">${dict ? dict[t.name] : t.name}</a>`).join(' ')
-    tEyes.innerHTML = '<a href="https://vndb.org/i35" class="btn btn-primary" target="_blank">眼睛</a>: ' + currentTraits['Eyes'].map(t => `<a href="https://vndb.org/${t.id}" class="btn btn-outline-${spoiler[t.spoiler]}" target="_blank">${dict ? dict[t.name] : t.name}</a>`).join(' ')
-    tBody.innerHTML = '<a href="https://vndb.org/i36" class="btn btn-primary" target="_blank">身体</a>: ' + currentTraits['Body'].map(t => `<a href="https://vndb.org/${t.id}" class="btn btn-outline-${spoiler[t.spoiler]}" target="_blank">${dict ? dict[t.name] : t.name}</a>`).join(' ')
-    tClothes.innerHTML = '<a href="https://vndb.org/i37" class="btn btn-primary" target="_blank">服装</a>: ' + currentTraits['Clothes'].map(t => `<a href="https://vndb.org/${t.id}" class="btn btn-outline-${spoiler[t.spoiler]}" target="_blank">${dict ? dict[t.name] : t.name}</a>`).join(' ')
-    tItems.innerHTML = '<a href="https://vndb.org/i38" class="btn btn-primary" target="_blank">物品</a>: ' + currentTraits['Items'].map(t => `<a href="https://vndb.org/${t.id}" class="btn btn-outline-${spoiler[t.spoiler]}" target="_blank">${dict ? dict[t.name] : t.name}</a>`).join(' ')
-    tPersonality.innerHTML = '<a href="https://vndb.org/i39" class="btn btn-primary" target="_blank">性格</a>: ' + currentTraits['Personality'].map(t => `<a href="https://vndb.org/${t.id}" class="btn btn-outline-${spoiler[t.spoiler]}" target="_blank">${dict ? dict[t.name] : t.name}</a>`).join(' ')
-    tRole.innerHTML = '<a href="https://vndb.org/i40" class="btn btn-primary" target="_blank">角色</a>: ' + currentTraits['Role'].map(t => `<a href="https://vndb.org/${t.id}" class="btn btn-outline-${spoiler[t.spoiler]}" target="_blank">${dict ? dict[t.name] : t.name}</a>`).join(' ')
-    tEngagesIn.innerHTML = '<a href="https://vndb.org/i41" class="btn btn-primary" target="_blank">主动</a>: ' + currentTraits['Engages in'].map(t => `<a href="https://vndb.org/${t.id}" class="btn btn-outline-${spoiler[t.spoiler]}" target="_blank">${dict ? dict[t.name] : t.name}</a>`).join(' ')
-    tSubjectOf.innerHTML = '<a href="https://vndb.org/i42" class="btn btn-primary" target="_blank">被动</a>: ' + currentTraits['Subject of'].map(t => `<a href="https://vndb.org/${t.id}" class="btn btn-outline-${spoiler[t.spoiler]}" target="_blank">${dict ? dict[t.name] : t.name}</a>`).join(' ')
+    tHair.innerHTML = '<a href="https://vndb.org/i1" class="btn btn-primary" target="_blank">毛发</a> : ' + currentTraits['Hair'].map(t => `<a href="https://vndb.org/${t.id}" class="btn btn-outline-${spoiler[t.spoiler]}" target="_blank">${dict ? dict[t.name] : t.name}</a>`).join(' ')
+    tEyes.innerHTML = '<a href="https://vndb.org/i35" class="btn btn-primary" target="_blank">眼睛</a> : ' + currentTraits['Eyes'].map(t => `<a href="https://vndb.org/${t.id}" class="btn btn-outline-${spoiler[t.spoiler]}" target="_blank">${dict ? dict[t.name] : t.name}</a>`).join(' ')
+    tBody.innerHTML = '<a href="https://vndb.org/i36" class="btn btn-primary" target="_blank">身体</a> : ' + currentTraits['Body'].map(t => `<a href="https://vndb.org/${t.id}" class="btn btn-outline-${spoiler[t.spoiler]}" target="_blank">${dict ? dict[t.name] : t.name}</a>`).join(' ')
+    tClothes.innerHTML = '<a href="https://vndb.org/i37" class="btn btn-primary" target="_blank">服装</a> : ' + currentTraits['Clothes'].map(t => `<a href="https://vndb.org/${t.id}" class="btn btn-outline-${spoiler[t.spoiler]}" target="_blank">${dict ? dict[t.name] : t.name}</a>`).join(' ')
+    tItems.innerHTML = '<a href="https://vndb.org/i38" class="btn btn-primary" target="_blank">物品</a> : ' + currentTraits['Items'].map(t => `<a href="https://vndb.org/${t.id}" class="btn btn-outline-${spoiler[t.spoiler]}" target="_blank">${dict ? dict[t.name] : t.name}</a>`).join(' ')
+    tPersonality.innerHTML = '<a href="https://vndb.org/i39" class="btn btn-primary" target="_blank">性格</a> : ' + currentTraits['Personality'].map(t => `<a href="https://vndb.org/${t.id}" class="btn btn-outline-${spoiler[t.spoiler]}" target="_blank">${dict ? dict[t.name] : t.name}</a>`).join(' ')
+    tRole.innerHTML = '<a href="https://vndb.org/i40" class="btn btn-primary" target="_blank">角色</a> : ' + currentTraits['Role'].map(t => `<a href="https://vndb.org/${t.id}" class="btn btn-outline-${spoiler[t.spoiler]}" target="_blank">${dict ? dict[t.name] : t.name}</a>`).join(' ')
+    tEngagesIn.innerHTML = '<a href="https://vndb.org/i41" class="btn btn-primary" target="_blank">主动</a> : ' + currentTraits['Engages in'].map(t => `<a href="https://vndb.org/${t.id}" class="btn btn-outline-${spoiler[t.spoiler]}" target="_blank">${dict ? dict[t.name] : t.name}</a>`).join(' ')
+    tSubjectOf.innerHTML = '<a href="https://vndb.org/i42" class="btn btn-primary" target="_blank">被动</a> : ' + currentTraits['Subject of'].map(t => `<a href="https://vndb.org/${t.id}" class="btn btn-outline-${spoiler[t.spoiler]}" target="_blank">${dict ? dict[t.name] : t.name}</a>`).join(' ')
 }
 
 export function showToast(title, message, type='info') {

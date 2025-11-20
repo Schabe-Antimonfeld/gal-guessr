@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/difficulties.css">
     <link rel="stylesheet" href="css/search_box.css">
@@ -20,6 +21,70 @@
     <h1>GalGuessr</h1>
 
     <div id="toast-container"></div>
+
+    <div class="btn-group" role="group">
+        <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#tutorial">写给玩家</button>
+        <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#history">猜测记录</button>
+    </div>
+
+    <div class="modal fade" id="tutorial" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5">写给玩家</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div><h5>游戏规则</h5></div>
+                    <div>选择难度，点击开始按钮开始游戏</div>
+                    <div>在搜索框中输入猜测角色的日文/罗马字名字进行搜索</div>
+                    <div>在字形相同时也可以试着输入汉字</div>
+                    <div>点击下拉框选择猜测角色</div>
+                    <div>系统会根据你的猜测给出猜测角色与目标角色的相同Traits</div>
+                    <div>Traits根据剧透的严重性分为蓝、黄、红三个等级</div>
+                    <div>根据已知Traits逐步缩小范围，直到猜出目标角色吧！</div>
+                    <div><h5>关于搜索</h5></div>
+                    <div>搜索功能基于<a href="https://vndb.org" target="_blank">VNDB</a>提供的API</div>
+                    <div>仅确保日文和罗马字输入能正常匹配</div>
+                    <div>忘记了角色的日文名可以去<a href="https://bgm.tv/" target="_blank">Bangumi</a>搜索</div>
+                    <div>搜索结果会优先显示关联度较高的角色</div>
+                    <div>仅显示前100条结果</div>
+                    <div><h5>难度等级与筛选规则</h5></div>
+                    <div>不同难度等级对应不同的作品筛选规则</div>
+                    <div>角色选取方式大致为：</div>
+                    <div>1. 根据难度等级筛选作品</div>
+                    <div>2. 从筛选后的作品中随机选取主要角色</div>
+                    <div>难度越高，作品越多，猜测越难</div>
+                    <div>筛选标准大致如下，详细请参考<a href="./js/api.js" target="_blank">源代码</a></div>
+                    <div>1. 原始语言为日语</div>
+                    <div>2. VNDB游戏时长在“Medium”及以上</div>
+                    <div>3. VNDB评分数与评分数均达到一定标准</div>
+                    <div>4. 有至少一个中文发行版</div>
+                    <div>5. 为R18或知名全年龄Gal会社作品</div>
+                    <div>6. 不包含某些特定标签</div>
+                    <div><h5>作者的话</h5></div>
+                    <div>喜欢的话来<a href="https://github.com/Schabe-Antimonfeld/gal-guessr" target="_blank">GitHub</a>给个星标喵~</div>
+                    <div>如果有希望屏蔽的Tags或其他建议和想法欢迎提Issue喵~</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="history" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5">猜测记录</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body history">
+                    记录空空如也喵~
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <br>
 
     <div class="container">
         <div class="d-flex justify-content-center">
@@ -49,12 +114,17 @@
     <br>
 
     <div class="search-container disabled">
-        <input type="text" id="searchInput" placeholder="输入角色名..." oninput="onSearchInput(this.value)">
+        <div class="input-group">
+            <input type="text" class="form-control" id="searchInput" placeholder="输入角色名..." aria-label="输入角色名" aria-describedby="button-addon2">
+            <button class="btn btn-primary" type="button" id="button-addon2"><i class="bi bi-search"></i></button>
+        </div>
         <div id="dropdown" class="dropdown" style="display:none;"></div>
     </div>
 
+    <span style="font-size: smaller; color: gray;">忘记了角色的日文名？去<a href="https://bgm.tv/" target="_blank">Bangumi</a>查一查吧!</span>
+
     <div id="result">
-        <div class="card mt-5 text-center " style="width: 22rem;">
+        <div class="card text-center " style="width: 22rem;">
             <h3 class="card-header" style="background-color: gainsboro;"></h3>
             <div class="row g-0">
                 <div class="col-md-4">
@@ -74,17 +144,17 @@
 
     <div class="container d-flex justify-content-center">
         <div class="card w-100" id="traits" style="max-width: 64rem">
-            <div class="card-header">已知Tags</div>
+            <div class="card-header">已知Traits</div>
             <div class="card-body">
-                <pre id="tHair"><a href="https://vndb.org/i1" class="btn btn-primary" target="_blank" >毛发</a>:</pre>
-                <pre id="tEyes"><a href="https://vndb.org/i35" class="btn btn-primary" target="_blank">眼睛</a>:</pre>
-                <pre id="tBody"><a href="https://vndb.org/i36" class="btn btn-primary" target="_blank">身体</a>:</pre>
-                <pre id="tClothes"><a href="https://vndb.org/i37" class="btn btn-primary" target="_blank">服装</a>:</pre>
-                <pre id="tItems"><a href="https://vndb.org/i38" class="btn btn-primary" target="_blank">物品</a>:</pre>
-                <pre id="tPersonality"><a href="https://vndb.org/i39" class="btn btn-primary" target="_blank">性格</a>:</pre>
-                <pre id="tRole"><a href="https://vndb.org/i40" class="btn btn-primary" target="_blank">角色</a>:</pre>
-                <pre id="tEngagesIn"><a href="https://vndb.org/i41" class="btn btn-primary" target="_blank">主动</a>:</pre>
-                <pre id="tSubjectOf"><a href="https://vndb.org/i42" class="btn btn-primary" target="_blank">被动</a>:</pre>
+                <div class="mb-2" id="tHair"><a href="https://vndb.org/i1" class="btn btn-primary" target="_blank" >毛发</a> :</div>
+                <div class="mb-2" id="tEyes"><a href="https://vndb.org/i35" class="btn btn-primary" target="_blank">眼睛</a> :</div>
+                <div class="mb-2" id="tBody"><a href="https://vndb.org/i36" class="btn btn-primary" target="_blank">身体</a> :</div>
+                <div class="mb-2" id="tClothes"><a href="https://vndb.org/i37" class="btn btn-primary" target="_blank">服装</a> :</div>
+                <div class="mb-2" id="tItems"><a href="https://vndb.org/i38" class="btn btn-primary" target="_blank">物品</a> :</div>
+                <div class="mb-2" id="tPersonality"><a href="https://vndb.org/i39" class="btn btn-primary" target="_blank">性格</a> :</div>
+                <div class="mb-2" id="tRole"><a href="https://vndb.org/i40" class="btn btn-primary" target="_blank">角色</a> :</div>
+                <div class="mb-2" id="tEngagesIn"><a href="https://vndb.org/i41" class="btn btn-primary" target="_blank">主动</a> :</div>
+                <div class="mb-2" id="tSubjectOf"><a href="https://vndb.org/i42" class="btn btn-primary" target="_blank">被动</a> :</div>
             </div>
         </div>
     </div>

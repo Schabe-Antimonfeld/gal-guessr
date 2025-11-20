@@ -28,7 +28,7 @@ export async function getVN(difficulty = 'normal') {
             case 'easy':
                 filters = [
                     'and',
-                    ['developer', '=', ['id', '=', 'p98']],
+                    ['developer', '=', ['id', '=', 'p98']],     // Yuzusoft
                     ['released', '>=', '2015-01-31']
                 ]   
                 break
@@ -36,6 +36,11 @@ export async function getVN(difficulty = 'normal') {
                 filters =[
                     'and',
                     ['olang', '=', 'ja'],
+                    ['or',
+                        ['length', '=', 3],
+                        ['length', '=', 4],
+                        ['length', '=', 5]
+                    ],
                     ['votecount', '>=', 2000],
                     ['rating', '>=', 70],
                     ['release', '=', [
@@ -45,23 +50,29 @@ export async function getVN(difficulty = 'normal') {
                         ['minage', '>=', 18],
                         ['producer', '=', [
                             'or',
-                            ['id', '=', 'p24'],
-                            ['id', '=', 'p146'],
-                            ['id', '=', 'p82'],
-                            ['id', '=', 'p11'],
-                            ['id', '=', 'p3354'],
-                            ['id', '=', 'p336']
+                            ['id', '=', 'p24'],    // Key
+                            ['id', '=', 'p146'],   // MAGES
+                            ['id', '=', 'p82'],    // 07th Expansion
+                            ['id', '=', 'p11'],    // Stage-nana
+                            ['id', '=', 'p3354'],  // NOVECT
+                            ['id', '=', 'p336']    // Frontwing
                         ]]]
                     ]],
-                    ['tag', '!=', 'g35'],
-                    ['tag', '!=', 'g33'],
-                    ['tag', '!=', 'g350']
+                    ['tag', '!=', 'g35'],    // RPG
+                    ['tag', '!=', 'g33'],    // Strategy Game
+                    ['tag', '!=', 'g350'],   // Interactive Adventure Game
+                    ['tag', '!=', 'g542']    // Otome Game
                 ]
                 break
             case 'hard':
                 filters = [
                     'and',
                     ['olang', '=', 'ja'],
+                    ['or',
+                        ['length', '=', 3],
+                        ['length', '=', 4],
+                        ['length', '=', 5]
+                    ],
                     ['votecount', '>=', 1000],
                     ['rating', '>=', 65],
                     ['release', '=', [
@@ -71,24 +82,30 @@ export async function getVN(difficulty = 'normal') {
                         ['minage', '>=', 18],
                         ['producer', '=', [
                             'or',
-                            ['id', '=', 'p24'],
-                            ['id', '=', 'p146'],
-                            ['id', '=', 'p82'],
-                            ['id', '=', 'p11'],
-                            ['id', '=', 'p3354'],
-                            ['id', '=', 'p336']
+                            ['id', '=', 'p24'],    // Key
+                            ['id', '=', 'p146'],   // MAGES
+                            ['id', '=', 'p82'],    // 07th Expansion
+                            ['id', '=', 'p11'],    // Stage-nana
+                            ['id', '=', 'p3354'],  // NOVECT
+                            ['id', '=', 'p336']    // Frontwing
                         ]]]
                     ]],
-                    ['tag', '!=', 'g35'],
-                    ['tag', '!=', 'g33'],
-                    ['tag', '!=', 'g350']
+                    ['tag', '!=', 'g35'],    // RPG
+                    ['tag', '!=', 'g33'],    // Strategy Game
+                    ['tag', '!=', 'g350'],   // Interactive Adventure Game
+                    ['tag', '!=', 'g542']    // Otome Game
                 ]
                 break
             case 'insane':
                 filters = [
                     'and',
                     ['olang', '=', 'ja'],
-                    ['votecount', '>=', 500],
+                    ['or',
+                        ['length', '=', 3],
+                        ['length', '=', 4],
+                        ['length', '=', 5]
+                    ],
+                    ['votecount', '>=', 300],
                     ['rating', '>=', 60],
                     ['release', '=', [
                         'and',
@@ -97,17 +114,18 @@ export async function getVN(difficulty = 'normal') {
                         ['minage', '>=', 18],
                         ['producer', '=', [
                             'or',
-                            ['id', '=', 'p24'],
-                            ['id', '=', 'p146'],
-                            ['id', '=', 'p82'],
-                            ['id', '=', 'p11'],
-                            ['id', '=', 'p3354'],
-                            ['id', '=', 'p336']
+                            ['id', '=', 'p24'],    // Key
+                            ['id', '=', 'p146'],   // MAGES
+                            ['id', '=', 'p82'],    // 07th Expansion
+                            ['id', '=', 'p11'],    // Stage-nana
+                            ['id', '=', 'p3354'],  // NOVECT
+                            ['id', '=', 'p336']    // Frontwing
                         ]]]
                     ]],
-                    ['tag', '!=', 'g35'],
-                    ['tag', '!=', 'g33'],
-                    ['tag', '!=', 'g350']
+                    ['tag', '!=', 'g35'],    // RPG
+                    ['tag', '!=', 'g33'],    // Strategy Game
+                    ['tag', '!=', 'g350'],   // Interactive Adventure Game
+                    ['tag', '!=', 'g542']    // Otome Game
                 ]
                 break
             default:
@@ -168,7 +186,7 @@ export async function getRandChar(vn) {
                     ],
                     ['vn', '=', ['id', '=', vn]]
                 ],
-                fields: 'name,original,image.url,traits{id,name,group_name,spoiler},vns.titles{title,lang}',
+                fields: 'name,original,image.url,traits{id,name,group_name,spoiler},vns{titles{title,lang},role}',
                 results: 100
             })
         })
@@ -201,7 +219,12 @@ export async function searchChar(name, page = 1) {
                     ['vn', '=', [
                         'and',
                         ['olang', '=', 'ja'],
-                        ['votecount', '>=', 500],
+                        ['or',
+                            ['length', '=', 3],
+                            ['length', '=', 4],
+                            ['length', '=', 5]
+                        ],
+                        ['votecount', '>=', 300],
                         ['rating', '>=', 60],
                         ['release', '=', [
                             'and',
@@ -210,24 +233,25 @@ export async function searchChar(name, page = 1) {
                             ['minage', '>=', 18],
                             ['producer', '=', [
                                 'or',
-                                ['id', '=', 'p24'],
-                                ['id', '=', 'p146'],
-                                ['id', '=', 'p82'],
-                                ['id', '=', 'p11'],
-                                ['id', '=', 'p3354'],
-                                ['id', '=', 'p336']
+                                ['id', '=', 'p24'],    // Key
+                                ['id', '=', 'p146'],   // MAGES
+                                ['id', '=', 'p82'],    // 07th Expansion
+                                ['id', '=', 'p11'],    // Stage-nana
+                                ['id', '=', 'p3354'],  // NOVECT
+                                ['id', '=', 'p336']    // Frontwing
                             ]]]
                         ]],
-                        ['tag', '!=', 'g35'],
-                        ['tag', '!=', 'g33'],
-                        ['tag', '!=', 'g350']
+                        ['tag', '!=', 'g35'],    // RPG
+                        ['tag', '!=', 'g33'],    // Strategy Game
+                        ['tag', '!=', 'g350'],   // Interactive Adventure Game
+                        ['tag', '!=', 'g542']    // Otome Game
                     ]],
                     ['gender', '=', 'f'],
                     ['or',
                     ['role', '=', 'main'],
                     ['role', '=', 'primary']],
                 ],
-                fields: 'name,original,image.url,traits{id,name,group_name,spoiler},vns.titles{title,lang}',
+                fields: 'name,original,image.url,traits{id,name,group_name,spoiler},vns{titles{title,lang},role}',
                 sort: 'searchrank',
                 page: page,
                 results: 100

@@ -1,15 +1,18 @@
 export function getVNTitle(char) {
     let originalTitle = ''
-    let titles = char.vns[0].titles
-    for (const titleObj of titles) {
-        if (titleObj.lang === 'zh-Hans') {
-            return titleObj.title
-        }
-        if (titleObj.lang === 'ja') {
-            originalTitle = titleObj.title
+    for (const vn of char.vns) {
+        if (vn.role === 'main' || vn.role === 'primary') {
+            for (const titleObj of vn.titles) {
+                if (titleObj.lang === 'zh-Hans') {
+                    return titleObj.title
+                }
+                if (titleObj.lang === 'ja') {
+                    originalTitle = titleObj.title
+                }
+            }
+            return originalTitle
         }
     }
-    return originalTitle
 }
 
 export function compareTraits(target, char) {
