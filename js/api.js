@@ -217,7 +217,9 @@ export async function searchChar(name, page = 1) {
                     'and',
                     ['search', '=', name],
                     ['vn', '=', [
-                        'and',
+                        'or',
+                        ['developer', '=', ['id', '=', 'p98']],     // Yuzusoft
+                        ['and',
                         ['olang', '=', 'ja'],
                         ['or',
                             ['length', '=', 3],
@@ -233,7 +235,6 @@ export async function searchChar(name, page = 1) {
                             ['minage', '>=', 18],
                             ['producer', '=', [
                                 'or',
-                                ['id', '=', 'p98'],    // Yuzusoft
                                 ['id', '=', 'p24'],    // Key
                                 ['id', '=', 'p146'],   // MAGES
                                 ['id', '=', 'p82'],    // 07th Expansion
@@ -246,7 +247,7 @@ export async function searchChar(name, page = 1) {
                         ['tag', '!=', 'g33'],    // Strategy Game
                         ['tag', '!=', 'g350'],   // Interactive Adventure Game
                         ['tag', '!=', 'g542']    // Otome Game
-                    ]],
+                    ]]],
                     ['gender', '=', 'f'],
                     ['or',
                     ['role', '=', 'main'],
